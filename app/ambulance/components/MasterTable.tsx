@@ -10,14 +10,28 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
 
-// Styled cells
+// -----------------------------
+// ✅ Define Ambulance Type
+// -----------------------------
+type Ambulance = {
+  id: string;
+  driver: string;
+  location: string;
+  status: string;
+  lastDispatch: string;
+  eta: string;
+  emergencyType: string;
+};
+
+// -----------------------------
+// ✅ Styled Table Components
+// -----------------------------
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.primary.main,
@@ -38,7 +52,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const ambulanceRows = [
+// -----------------------------
+// ✅ Static Ambulance Data
+// -----------------------------
+const ambulanceRows: Ambulance[] = [
   {
     id: 'AMB-001',
     driver: 'Rajesh Thapa',
@@ -131,17 +148,20 @@ const ambulanceRows = [
   },
 ];
 
+// -----------------------------
+// ✅ Main Component
+// -----------------------------
 export default function AmbulanceTable() {
   const [dispatchOpen, setDispatchOpen] = React.useState(false);
   const [detailsOpen, setDetailsOpen] = React.useState(false);
-  const [selectedAmbulance, setSelectedAmbulance] = React.useState(null);
+  const [selectedAmbulance, setSelectedAmbulance] = React.useState<Ambulance | null>(null);
 
-  const handleDispatchClick = (ambulance: any) => {
+  const handleDispatchClick = (ambulance: Ambulance) => {
     setSelectedAmbulance(ambulance);
     setDispatchOpen(true);
   };
 
-  const handleDetailsClick = (ambulance: any) => {
+  const handleDetailsClick = (ambulance: Ambulance) => {
     setSelectedAmbulance(ambulance);
     setDetailsOpen(true);
   };
@@ -150,29 +170,18 @@ export default function AmbulanceTable() {
   const handleCloseDetails = () => setDetailsOpen(false);
 
   const handleConfirmDispatch = () => {
-    alert(`Ambulance ${selectedAmbulance.id} dispatched!`);
-    setDispatchOpen(false);
+    if (selectedAmbulance) {
+      alert(`Ambulance ${selectedAmbulance.id} dispatched!`);
+      setDispatchOpen(false);
+    } else {
+      console.error('No ambulance selected for dispatch.');
+    }
   };
 
   return (
     <div style={{ backgroundColor: 'white', padding: '1rem' }}>
-      <TableContainer
-        component={Paper}
-        sx={{
-          width: '100%',
-          overflowX: 'auto',
-          backgroundColor: 'white',
-        }}
-      >
-        <Table
-          sx={{
-            width: '100%',
-            minWidth: 650,
-            tableLayout: 'auto',
-            backgroundColor: 'white',
-          }}
-          aria-label="ambulance service table"
-        >
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="ambulance table">
           <TableHead>
             <TableRow>
               <StyledTableCell>Ambulance ID</StyledTableCell>
@@ -180,7 +189,7 @@ export default function AmbulanceTable() {
               <StyledTableCell>Location</StyledTableCell>
               <StyledTableCell>Status</StyledTableCell>
               <StyledTableCell>Last Dispatch</StyledTableCell>
-              <StyledTableCell>ETA to Hospital</StyledTableCell>
+              <StyledTableCell>ETA</StyledTableCell>
               <StyledTableCell>Emergency Type</StyledTableCell>
               <StyledTableCell align="center">Actions</StyledTableCell>
             </TableRow>
@@ -188,19 +197,14 @@ export default function AmbulanceTable() {
           <TableBody>
             {ambulanceRows.map((row) => (
               <StyledTableRow key={row.id}>
-                <StyledTableCell component="th" scope="row">
-                  {row.id}
-                </StyledTableCell>
+                <StyledTableCell>{row.id}</StyledTableCell>
                 <StyledTableCell>{row.driver}</StyledTableCell>
                 <StyledTableCell>{row.location}</StyledTableCell>
                 <StyledTableCell>{row.status}</StyledTableCell>
                 <StyledTableCell>{row.lastDispatch}</StyledTableCell>
                 <StyledTableCell>{row.eta}</StyledTableCell>
                 <StyledTableCell>{row.emergencyType}</StyledTableCell>
-                <StyledTableCell
-                  align="center"
-                  sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}
-                >
+                <StyledTableCell align="center" sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
                   <Button
                     variant="contained"
                     color="success"
@@ -224,7 +228,7 @@ export default function AmbulanceTable() {
         </Table>
       </TableContainer>
 
-      {/* Dispatch Confirmation Dialog */}
+      {/* ✅ Dispatch Dialog */}
       <Dialog open={dispatchOpen} onClose={handleCloseDispatch}>
         <DialogTitle>Confirm Dispatch</DialogTitle>
         <DialogContent>
@@ -242,7 +246,7 @@ export default function AmbulanceTable() {
         </DialogActions>
       </Dialog>
 
-      {/* Details Dialog */}
+      {/* ✅ Details Dialog */}
       <Dialog open={detailsOpen} onClose={handleCloseDetails} maxWidth="sm" fullWidth>
         <DialogTitle>Ambulance Details - {selectedAmbulance?.id}</DialogTitle>
         <DialogContent dividers>
