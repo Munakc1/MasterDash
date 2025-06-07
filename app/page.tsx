@@ -1,13 +1,13 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import anime from 'animejs';
 
 export default function LoginPage() {
   const router = useRouter();
-
-  // Example state to toggle a message color ternary
   const [hasError, setHasError] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (localStorage.getItem('loggedIn') === 'true') {
@@ -15,10 +15,21 @@ export default function LoginPage() {
     }
   }, [router]);
 
+  // Mount animation using Anime.js
+  useEffect(() => {
+    if (cardRef.current) {
+      anime({
+        targets: cardRef.current,
+        translateY: [-40, 0],
+        opacity: [0, 1],
+        duration: 800,
+        easing: 'easeOutExpo',
+      });
+    }
+  }, []);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // Example: simple validation (toggle error message)
     const form = e.currentTarget;
     const phone = (form.elements.namedItem('phone') as HTMLInputElement).value;
     const password = (form.elements.namedItem('password') as HTMLInputElement).value;
@@ -34,80 +45,70 @@ export default function LoginPage() {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-4"
-      style={{
-        background:
-          'linear-gradient(135deg, #0077B6 0%, #023E8A 70%, #03045E 100%)',
-      }}
-    >
-      <div className="w-full max-w-md p-10 bg-white bg-opacity-90 rounded-3xl shadow-xl">
-        <h2 className="text-4xl font-extrabold mb-3 text-[#023E8A] text-center tracking-wide">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-white">
+      <div
+        ref={cardRef}
+        className="w-full max-w-md p-8 sm:p-10 bg-white rounded-2xl shadow-lg border border-gray-300 transition-transform duration-300 hover:scale-105"
+      >
+        <h2 className="text-3xl font-bold mb-2 text-[#023E8A] text-center tracking-wide">
           Dashboard
         </h2>
-        <p className="text-center text-gray-700 mb-8 text-base font-medium">
-          Sign in to your account
+        <p className="text-center text-gray-600 mb-6 text-sm">
+          Please sign in to your dashboard
         </p>
 
-        {/* Conditional text with ternary for color */}
         {hasError && (
-          <p className="mb-4 text-center text-red-600 font-semibold">
+          <p className="mb-4 text-center text-red-600 font-medium text-sm">
             Please enter a valid 10-digit phone number.
           </p>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label
-              htmlFor="phone"
-              className="block text-sm font-semibold text-gray-800 mb-2"
-            >
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
               Phone Number
             </label>
             <input
               id="phone"
               name="phone"
               type="text"
-              placeholder="Enter your phone number"
+              placeholder="9876543210"
               required
-              className="w-full px-4 py-3 border border-[#5FA8D3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0077B6] placeholder-gray-400 transition"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0077B6] transition-all duration-200"
             />
           </div>
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-semibold text-gray-800 mb-2"
-            >
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
             <input
               id="password"
               name="password"
               type="password"
-              placeholder="Enter your password"
+              placeholder="••••••••"
               required
-              className="w-full px-4 py-3 border border-[#5FA8D3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0077B6] placeholder-gray-400 transition"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0077B6] transition-all duration-200"
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-[#0077B6] hover:bg-[#005f8f] text-white font-semibold py-3 rounded-lg shadow-md transition duration-300"
+            className="w-full bg-[#0077B6] text-white font-semibold py-3 rounded-lg shadow-sm transition-all duration-300 hover:bg-white hover:text-[#0077B6] hover:border-[#0077B6] border border-transparent"
           >
-            Sign in
+            Sign In
           </button>
         </form>
 
-       <p className="text-xs text-center mt-8 text-gray-600 tracking-wide">
-  By signing in, you agree to our{' '}
-  <span className="text-[#0077B6] font-semibold cursor-pointer hover:underline">
-    Terms
-  </span>{' '}
-  and{' '}
-  <span className="text-[#0077B6] font-semibold cursor-pointer hover:underline">
-    Privacy Policy
-  </span>
-  .
-</p>
+        <p className="text-xs text-center mt-6 text-gray-500">
+          By signing in, you agree to our{' '}
+          <span className="text-[#0077B6] font-semibold hover:underline cursor-pointer">
+            Terms
+          </span>{' '}
+          and{' '}
+          <span className="text-[#0077B6] font-semibold hover:underline cursor-pointer">
+            Privacy Policy
+          </span>
+          .
+        </p>
       </div>
     </div>
   );

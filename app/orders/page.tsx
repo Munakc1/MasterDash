@@ -1,12 +1,9 @@
 "use client";
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent } from "react";
 import {
   TextField,
   Grid,
-  Card,
-  CardContent,
   Typography,
-  Button,
   InputAdornment,
   Badge,
   Modal,
@@ -15,10 +12,16 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Paper,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 
 interface Medicine {
   id: number;
@@ -28,64 +31,65 @@ interface Medicine {
   discountedPrice: number;
   inStock: boolean;
   prescriptionRequired: boolean;
+  category: string; // Added category field
 }
 
 const medicines: Medicine[] = [
   {
     id: 1,
-    name: 'Paracetamol 500mg',
-    manufacturer: 'Cipla',
+    name: "Paracetamol 500mg",
+    manufacturer: "Cipla",
     price: 30,
     discountedPrice: 25,
     inStock: true,
     prescriptionRequired: true,
+    category: "Tablets",
   },
   {
     id: 2,
-    name: 'Cough Syrup',
-    manufacturer: 'Himalaya',
+    name: "Cough Syrup",
+    manufacturer: "Himalaya",
     price: 70,
     discountedPrice: 60,
     inStock: true,
     prescriptionRequired: false,
+    category: "Syrups",
   },
   {
     id: 3,
-    name: 'Vitamin D Injection',
-    manufacturer: 'Zydus',
+    name: "Vitamin D Injection",
+    manufacturer: "Zydus",
     price: 150,
     discountedPrice: 130,
     inStock: false,
     prescriptionRequired: true,
+    category: "Injections",
   },
 ];
 
-const categories: string[] = ['All', 'Tablets', 'Syrups', 'Injections'];
+const categories: string[] = ["All", "Tablets", "Syrups", "Injections"];
 
 const modalStyle = {
-  position: 'absolute' as const,
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute" as const,
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 350,
-  bgcolor: 'background.paper',
+  bgcolor: "background.paper",
   borderRadius: 2,
   boxShadow: 24,
   p: 4,
 };
 
 export default function MedicineOrderPage() {
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [category, setCategory] = useState<string>('All');
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [category, setCategory] = useState<string>("All");
   const [prescriptionModalOpen, setPrescriptionModalOpen] = useState<boolean>(false);
   const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null);
 
-  // Filter medicines by search and category
   const filteredMedicines = medicines.filter((med) => {
     const matchesSearch = med.name.toLowerCase().includes(searchTerm.toLowerCase());
-    // Minimal category filtering for demo
-    const matchesCategory =
-      category === 'All' || med.name.toLowerCase().includes(category.toLowerCase());
+    const matchesCategory = category === "All" || med.category === category;
     return matchesSearch && matchesCategory;
   });
 
@@ -151,64 +155,58 @@ export default function MedicineOrderPage() {
         </Grid>
       </Grid>
 
-      {/* Medicines List */}
-      <Grid container spacing={3}>
-        {filteredMedicines.length === 0 && (
-          <Grid item xs={12}>
-            <Typography color="textSecondary">No medicines found.</Typography>
-          </Grid>
-        )}
+      {/* Medicines Table */}
+      <TableContainer component={Paper} sx={{ marginTop: 3 }}>
+        <Table aria-label="medicine table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Medicine Name</TableCell>
+              <TableCell>Manufacturer</TableCell>
+              <TableCell>Price (₹)</TableCell>
+              <TableCell>Discounted Price (₹)</TableCell>
+              <TableCell>Stock Status</TableCell>
+              <TableCell>Prescription Required</TableCell>
+            </TableRow>
+          </TableHead>
 
-        {filteredMedicines.map((med) => (
-          <Grid item xs={12} sm={6} md={4} key={med.id}>
-            <Card
-              variant="outlined"
-              sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-            >
-              <CardContent sx={{ flexGrow: 1 }}>
-                <Typography variant="h6">{med.name}</Typography>
-                <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                  {med.manufacturer}
-                </Typography>
-
-                <Typography>
-                  Price: <s>₹{med.price}</s> <strong>₹{med.discountedPrice}</strong>
-                </Typography>
-                <Typography color={med.inStock ? 'green' : 'red'} fontWeight="bold" mt={1}>
-                  {med.inStock ? 'In Stock' : 'Out of Stock'}
-                </Typography>
-
-                {med.prescriptionRequired && (
-                  <Badge color="secondary" badgeContent="Rx" sx={{ mt: 1 }} />
-                )}
-              </CardContent>
-
-              <Box sx={{ p: 2 }}>
-                {med.prescriptionRequired ? (
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    disabled={!med.inStock}
-                    startIcon={<UploadFileIcon />}
-                    onClick={() => handleOpenPrescriptionModal(med)}
-                  >
-                    Upload Prescription
-                  </Button>
-                ) : (
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    disabled={!med.inStock}
-                    startIcon={<ShoppingCartIcon />}
-                  >
-                    Add to Cart
-                  </Button>
-                )}
-              </Box>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+          <TableBody>
+            {filteredMedicines.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  No medicines found.
+                </TableCell>
+              </TableRow>
+            ) : (
+              filteredMedicines.map((med) => (
+                <TableRow key={med.id}>
+                  <TableCell>{med.name}</TableCell>
+                  <TableCell>{med.manufacturer}</TableCell>
+                  <TableCell>
+                    <Typography component="span" sx={{ textDecoration: "line-through", mr: 1 }}>
+                      ₹{med.price}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography fontWeight="bold">₹{med.discountedPrice}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color={med.inStock ? "green" : "red"} fontWeight="bold">
+                      {med.inStock ? "In Stock" : "Out of Stock"}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    {med.prescriptionRequired ? (
+                      <Badge color="secondary" badgeContent="Rx" />
+                    ) : (
+                      "No"
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       {/* Prescription Upload Modal */}
       <Modal
@@ -222,25 +220,59 @@ export default function MedicineOrderPage() {
             Upload Prescription for {selectedMedicine?.name}
           </Typography>
 
-          <Button
-            variant="outlined"
-            component="label"
-            startIcon={<UploadFileIcon />}
-            fullWidth
-            sx={{ mb: 2 }}
-          >
-            Choose File
-            <input
-              type="file"
-              hidden
-              accept=".pdf,.jpg,.jpeg,.png"
-              onChange={handlePrescriptionUpload}
-            />
-          </Button>
+          <Box>
+            <label htmlFor="upload-prescription-file">
+              <input
+                accept=".pdf,.jpg,.jpeg,.png"
+                style={{ display: "none" }}
+                id="upload-prescription-file"
+                type="file"
+                onChange={handlePrescriptionUpload}
+              />
+              <Box
+                component="span"
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  cursor: "pointer",
+                  border: "1px solid",
+                  borderColor: "primary.main",
+                  borderRadius: 1,
+                  padding: "6px 12px",
+                  color: "primary.main",
+                  mb: 2,
+                  userSelect: "none",
+                }}
+              >
+                <UploadFileIcon sx={{ mr: 1 }} />
+                Choose File
+              </Box>
+            </label>
+          </Box>
 
-          <Button variant="contained" onClick={handleClosePrescriptionModal} fullWidth>
-            Cancel
-          </Button>
+          <Box>
+            <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+              Allowed file types: .pdf, .jpg, .jpeg, .png
+            </Typography>
+          </Box>
+
+          <Box>
+            <button
+              onClick={handleClosePrescriptionModal}
+              style={{
+                width: "100%",
+                padding: "8px 0",
+                backgroundColor: "#1976d2",
+                color: "#fff",
+                border: "none",
+                borderRadius: 4,
+                cursor: "pointer",
+                fontSize: 16,
+              }}
+            >
+              Cancel
+            </button>
+          </Box>
         </Box>
       </Modal>
     </div>

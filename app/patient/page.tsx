@@ -66,6 +66,9 @@ const colors = {
   successGreen: '#4C956C',
   accentOrange: '#F4A261',
   darkText: '#333333',
+  white: '#FFFFFF',
+  midBlack: '#666666',
+  Blue: '#2196f3',
 };
 
 export default function PatientsPage() {
@@ -318,7 +321,7 @@ export default function PatientsPage() {
             <Button
               variant="contained"
               startIcon={<Add />}
-              style={{ backgroundColor: colors.primary, color: 'white' }}
+              style={{ backgroundColor: colors.Blue, color: 'white' }}
               onClick={openAddDialog}
             >
               Add Patient
@@ -331,7 +334,7 @@ export default function PatientsPage() {
               variant="outlined"
               startIcon={<FilterList />}
               onClick={() => alert('Filter already available above!')}
-              style={{ borderColor: colors.midBlue, color: colors.midBlue }}
+              style={{ borderColor: colors.midBlack, color: colors.midBlack }}
             >
               Filter
             </Button>
@@ -339,7 +342,7 @@ export default function PatientsPage() {
               variant="outlined"
               startIcon={<Download />}
               onClick={handleExport}
-              style={{ borderColor: colors.midBlue, color: colors.midBlue }}
+              style={{ borderColor: colors.midBlack, color: colors.midBlack }}
             >
               Export
             </Button>
@@ -347,7 +350,7 @@ export default function PatientsPage() {
               variant="outlined"
               startIcon={<Upload />}
               onClick={handleImportClick}
-              style={{ borderColor: colors.midBlue, color: colors.midBlue }}
+              style={{ borderColor: colors.midBlack, color: colors.midBlack }}
             >
               Import
             </Button>
@@ -366,7 +369,7 @@ export default function PatientsPage() {
       {/* Patients Table */}
       <Card
         sx={{ borderRadius: 2, overflowX: 'auto', boxShadow: 3 }}
-        style={{ backgroundColor: colors.lightBlue }}
+        style={{ backgroundColor: colors.white }}
       >
         <CardContent>
           <table className="w-full border-collapse" style={{ minWidth: 650 }}>
