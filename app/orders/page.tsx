@@ -19,6 +19,7 @@ import {
   TableCell,
   TableBody,
   Paper,
+  Button,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
@@ -31,7 +32,7 @@ interface Medicine {
   discountedPrice: number;
   inStock: boolean;
   prescriptionRequired: boolean;
-  category: string; // Added category field
+  category: string;
 }
 
 const medicines: Medicine[] = [
@@ -112,13 +113,13 @@ export default function MedicineOrderPage() {
   };
 
   return (
-    <div style={{ padding: 24 }}>
+    <Box sx={{ padding: 3 }}>
       <Typography variant="h4" gutterBottom>
         Order Medicines
       </Typography>
 
       {/* Search and Filter */}
-      <Grid container spacing={2} alignItems="center" marginBottom={3}>
+      <Grid container spacing={2} sx={{ alignItems: "center", mb: 3 }}>
         <Grid item xs={12} md={6}>
           <TextField
             fullWidth
@@ -156,7 +157,7 @@ export default function MedicineOrderPage() {
       </Grid>
 
       {/* Medicines Table */}
-      <TableContainer component={Paper} sx={{ marginTop: 3 }}>
+      <TableContainer component={Paper} sx={{ mt: 3 }}>
         <Table aria-label="medicine table">
           <TableHead>
             <TableRow>
@@ -166,13 +167,14 @@ export default function MedicineOrderPage() {
               <TableCell>Discounted Price (₹)</TableCell>
               <TableCell>Stock Status</TableCell>
               <TableCell>Prescription Required</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {filteredMedicines.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} align="center">
+                <TableCell colSpan={7} align="center">
                   No medicines found.
                 </TableCell>
               </TableRow>
@@ -201,6 +203,26 @@ export default function MedicineOrderPage() {
                       "No"
                     )}
                   </TableCell>
+                  <TableCell>
+                    {med.prescriptionRequired ? (
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => handleOpenPrescriptionModal(med)}
+                        disabled={!med.inStock}
+                      >
+                        Upload Rx
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        disabled={!med.inStock}
+                      >
+                        Add to Cart
+                      </Button>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))
             )}
@@ -220,7 +242,7 @@ export default function MedicineOrderPage() {
             Upload Prescription for {selectedMedicine?.name}
           </Typography>
 
-          <Box>
+          <Box sx={{ mb: 2 }}>
             <label htmlFor="upload-prescription-file">
               <input
                 accept=".pdf,.jpg,.jpeg,.png"
@@ -240,8 +262,11 @@ export default function MedicineOrderPage() {
                   borderRadius: 1,
                   padding: "6px 12px",
                   color: "primary.main",
-                  mb: 2,
                   userSelect: "none",
+                  "&:hover": {
+                    backgroundColor: "primary.light",
+                    color: "primary.contrastText",
+                  },
                 }}
               >
                 <UploadFileIcon sx={{ mr: 1 }} />
@@ -250,31 +275,19 @@ export default function MedicineOrderPage() {
             </label>
           </Box>
 
-          <Box>
-            <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-              Allowed file types: .pdf, .jpg, .jpeg, .png
-            </Typography>
-          </Box>
+          <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+            Allowed file types: .pdf, .jpg, .jpeg, .png
+          </Typography>
 
-          <Box>
-            <button
-              onClick={handleClosePrescriptionModal}
-              style={{
-                width: "100%",
-                padding: "8px 0",
-                backgroundColor: "#1976d2",
-                color: "#fff",
-                border: "none",
-                borderRadius: 4,
-                cursor: "pointer",
-                fontSize: 16,
-              }}
-            >
-              Cancel
-            </button>
-          </Box>
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={handleClosePrescriptionModal}
+          >
+            Cancel
+          </Button>
         </Box>
       </Modal>
-    </div>
+    </Box>
   );
 }

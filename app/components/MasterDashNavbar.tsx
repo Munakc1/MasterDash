@@ -4,7 +4,7 @@ import { ReactNode, useState } from 'react';
 import {
   Dashboard, People, LocalHospital, Healing, Inventory2, ShoppingCart, LocalPharmacy, SupportAgent,
   AccountCircle, HelpOutline, Calculate, Settings, ExpandLess, ExpandMore, BarChart, Analytics,
-  Menu, Mail, Notifications, Logout, LightMode, DarkMode, Search, LocalShipping,
+  Menu, Mail, Notifications, Logout, LightMode, DarkMode, Search, LocalShipping, AttachMoney,
 } from '@mui/icons-material';
 
 import {
@@ -21,6 +21,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const isHomePage = pathname === '/';
 
   const [moreOpen, setMoreOpen] = useState(false);
+  const [financeOpen, setFinanceOpen] = useState(false); // state for Finance dropdown
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -56,7 +57,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     { label: 'Medicine Stock', icon: <Inventory2 fontSize="small" />, path: '/medicine-stock' },
     { label: 'Medicine Orders', icon: <ShoppingCart fontSize="small" />, path: '/orders' },
     { label: 'Pharmacy', icon: <LocalPharmacy fontSize="small" />, path: '/pharmacy' },
-    { label: 'Finance', icon: <BarChart fontSize="small" />, path: '/finance' },
     { label: 'Ambulance Service', icon: <LocalShipping fontSize="small" />, path: '/ambulance' },
     { label: 'Support', icon: <SupportAgent fontSize="small" />, path: '/support' },
     { label: 'Account', icon: <AccountCircle fontSize="small" />, path: '/account' },
@@ -68,6 +68,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const moreItems = [
     { label: 'Reports', path: '/reports', icon: <BarChart fontSize="small" /> },
     { label: 'Analytics', path: '/analytics', icon: <Analytics fontSize="small" /> },
+  ];
+
+  const financeItems = [
+    { label: 'Pharmacy Transactions', path: '/finance/pharmacy-transaction', icon: <LocalPharmacy fontSize="small" /> },
+    { label: 'Patient Transactions', path: '/finance/patient-transaction', icon: <People fontSize="small" /> },
+    { label: 'Doctor Transactions', path: '/finance/doctor-transaction', icon: <LocalHospital fontSize="small" /> },
   ];
 
   const NAVBAR_HEIGHT = 56;
@@ -123,7 +129,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
               <Tooltip title="Toggle Dark Mode">
                 <IconButton onClick={toggleDarkMode}>
-                  {/* 🌞 Show LightMode icon when in Light Mode */}
                   {darkMode ? <DarkMode className="text-white" /> : <LightMode className="text-black" />}
                 </IconButton>
               </Tooltip>
@@ -134,7 +139,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               </button>
             </div>
 
-            {/* Profile Dropdown */}
             {isMenuOpen && anchorEl && (
               <div
                 className="absolute bg-gray-900 text-white rounded-lg shadow-lg w-48 z-50 ring-1 ring-gray-700"
@@ -175,6 +179,28 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   </Link>
                 ))}
 
+                {/* Finance Dropdown */}
+                <ListItemButton onClick={() => setFinanceOpen(!financeOpen)} className={`py-1 px-2 ${!sidebarOpen ? 'justify-center' : ''} ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
+                  <ListItemIcon className={`${darkMode ? 'text-white' : 'text-black'} min-w-0 justify-center`}>
+                    <AttachMoney fontSize="small" />
+                  </ListItemIcon>
+                  {sidebarOpen && <ListItemText primary="Finance" primaryTypographyProps={{ className: `text-base font-bold ${darkMode ? 'text-white' : 'text-black'}` }} />}
+                  {sidebarOpen && (financeOpen ? <ExpandLess /> : <ExpandMore />)}
+                </ListItemButton>
+                <Collapse in={financeOpen} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding dense>
+                    {financeItems.map((item) => (
+                      <Link key={item.label} href={item.path} passHref>
+                        <ListItemButton className={`pl-10 py-1 ${!sidebarOpen ? 'hidden' : ''} ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
+                          <ListItemIcon className={`${darkMode ? 'text-white' : 'text-black'}`}>{item.icon}</ListItemIcon>
+                          <ListItemText primary={item.label} primaryTypographyProps={{ className: `text-base font-bold ${darkMode ? 'text-white' : 'text-black'}` }} />
+                        </ListItemButton>
+                      </Link>
+                    ))}
+                  </List>
+                </Collapse>
+
+                {/* More Dropdown */}
                 <ListItemButton onClick={() => setMoreOpen(!moreOpen)} className={`py-1 px-2 ${!sidebarOpen ? 'justify-center' : ''} ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
                   <ListItemIcon className={`${darkMode ? 'text-white' : 'text-black'} min-w-0 justify-center`}>
                     <Inventory2 fontSize="small" />
@@ -182,7 +208,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   {sidebarOpen && <ListItemText primary="More" primaryTypographyProps={{ className: `text-base font-bold ${darkMode ? 'text-white' : 'text-black'}` }} />}
                   {sidebarOpen && (moreOpen ? <ExpandLess /> : <ExpandMore />)}
                 </ListItemButton>
-
                 <Collapse in={moreOpen} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding dense>
                     {moreItems.map((item) => (
