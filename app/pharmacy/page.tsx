@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -12,7 +12,6 @@ import {
   DialogContent,
   DialogActions,
   Typography,
-  Grid,
   MenuItem,
   InputAdornment,
 } from '@mui/material';
@@ -53,94 +52,24 @@ const colors = {
 };
 
 export default function PharmacyPage() {
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: 1,
-      name: 'Paracetamol 500mg',
-      category: 'Medicines',
-      brand: 'Pharma Inc',
-      price: 20,
-      stock: 100,
-      unit: 'tablets',
-      prescriptionRequired: false,
-    },
-    {
-      id: 2,
-      name: 'Vitamin C 1000mg',
-      category: 'Health Supplements',
-      brand: 'NutriPlus',
-      price: 35,
-      stock: 50,
-      unit: 'tablets',
-      prescriptionRequired: false,
-    },
-    {
-      id: 3,
-      name: 'Digital Thermometer',
-      category: 'Medical Equipment',
-      brand: 'MediTech',
-      price: 1500,
-      stock: 20,
-      unit: 'pcs',
-      prescriptionRequired: false,
-    },
-    {
-      id: 4,
-      name: 'Baby Diapers Size M',
-      category: 'Baby & Maternity',
-      brand: 'BabyCare',
-      price: 450,
-      stock: 80,
-      unit: 'packs',
-      prescriptionRequired: false,
-    },
-    {
-      id: 5,
-      name: 'Hand Sanitizer 250ml',
-      category: 'Personal Care',
-      brand: 'CleanHands',
-      price: 120,
-      stock: 200,
-      unit: 'bottles',
-      prescriptionRequired: false,
-    },
-    {
-      id: 6,
-      name: 'Amoxicillin 500mg',
-      category: 'Medicines',
-      brand: 'HealthCorp',
-      price: 60,
-      stock: 70,
-      unit: 'capsules',
-      prescriptionRequired: true,
-    },
-    {
-      id: 7,
-      name: 'Multivitamin Gummies',
-      category: 'Health Supplements',
-      brand: 'VitaLife',
-      price: 250,
-      stock: 45,
-      unit: 'bottles',
-      prescriptionRequired: false,
-    },
-    {
-      id: 8,
-      name: 'Blood Pressure Monitor',
-      category: 'Medical Equipment',
-      brand: 'CarePlus',
-      price: 3500,
-      stock: 15,
-      unit: 'pcs',
-      prescriptionRequired: false,
-    },
-  ]);
-
+  const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newProduct, setNewProduct] = useState<Partial<Product>>({});
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+  fetch('http://localhost:4000/products')
+ // or change to correct port
+    .then(res => {
+      if (!res.ok) throw new Error('Network response was not ok');
+      return res.json();
+    })
+    .then(data => setProducts(data))
+    .catch(err => console.error('Failed to load data', err));
+}, []);
+
 
   const filteredProducts = products.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase()) &&
@@ -199,8 +128,17 @@ export default function PharmacyPage() {
         🏪 Pharmacy Products
       </Typography>
 
-      <Grid container spacing={2} alignItems="center" sx={{ mb: 3 }}>
-        <Grid item xs={12} md={6}>
+      {/* Search & Filter (Flexbox Layout) */}
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '16px',
+          marginBottom: '24px',
+          alignItems: 'center',
+        }}
+      >
+        <div style={{ flex: '1 1 300px', minWidth: '280px' }}>
           <TextField
             fullWidth
             placeholder="Search by name or brand..."
@@ -214,8 +152,9 @@ export default function PharmacyPage() {
               ),
             }}
           />
-        </Grid>
-        <Grid item xs={12} md={3}>
+        </div>
+
+        <div style={{ flex: '0 0 200px', minWidth: '180px' }}>
           <TextField
             fullWidth
             select
@@ -230,8 +169,9 @@ export default function PharmacyPage() {
               </MenuItem>
             ))}
           </TextField>
-        </Grid>
-        <Grid item xs={12} md={3}>
+        </div>
+
+        <div style={{ flex: '0 0 150px', minWidth: '140px' }}>
           <Button
             variant="contained"
             startIcon={<Add />}
@@ -244,38 +184,39 @@ export default function PharmacyPage() {
           >
             Add Product
           </Button>
-        </Grid>
-      </Grid>
+        </div>
+      </div>
 
+      {/* Table */}
       <Card variant="outlined" sx={{ backgroundColor: colors.lightBlue }}>
         <CardContent>
           {filteredProducts.length ? (
-            <table className="min-w-full text-left text-sm">
+            <table className="min-w-full text-left text-sm" style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead style={{ backgroundColor: '#e6f0f7' }}>
                 <tr>
-                  <th className="p-3">ID</th>
-                  <th className="p-3">Name</th>
-                  <th className="p-3">Category</th>
-                  <th className="p-3">Brand</th>
-                  <th className="p-3">Price</th>
-                  <th className="p-3">Stock</th>
-                  <th className="p-3">Unit</th>
-                  <th className="p-3">Prescription</th>
-                  <th className="p-3">Actions</th>
+                  <th className="p-3" style={{ padding: '12px' }}>ID</th>
+                  <th className="p-3" style={{ padding: '12px' }}>Name</th>
+                  <th className="p-3" style={{ padding: '12px' }}>Category</th>
+                  <th className="p-3" style={{ padding: '12px' }}>Brand</th>
+                  <th className="p-3" style={{ padding: '12px' }}>Price</th>
+                  <th className="p-3" style={{ padding: '12px' }}>Stock</th>
+                  <th className="p-3" style={{ padding: '12px' }}>Unit</th>
+                  <th className="p-3" style={{ padding: '12px' }}>Prescription</th>
+                  <th className="p-3" style={{ padding: '12px' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredProducts.map(product => (
-                  <tr key={product.id} className="border-t hover:bg-gray-50">
-                    <td className="p-3">{product.id}</td>
-                    <td className="p-3">{product.name}</td>
-                    <td className="p-3">{product.category}</td>
-                    <td className="p-3">{product.brand}</td>
-                    <td className="p-3">Rs. {product.price}</td>
-                    <td className="p-3">{product.stock}</td>
-                    <td className="p-3">{product.unit}</td>
-                    <td className="p-3">{product.prescriptionRequired ? 'Yes' : 'No'}</td>
-                    <td className="p-3">
+                  <tr key={product.id} className="border-t hover:bg-gray-50" style={{ borderTop: '1px solid #ddd', cursor: 'default' }}>
+                    <td className="p-3" style={{ padding: '12px' }}>{product.id}</td>
+                    <td className="p-3" style={{ padding: '12px' }}>{product.name}</td>
+                    <td className="p-3" style={{ padding: '12px' }}>{product.category}</td>
+                    <td className="p-3" style={{ padding: '12px' }}>{product.brand}</td>
+                    <td className="p-3" style={{ padding: '12px' }}>Rs. {product.price}</td>
+                    <td className="p-3" style={{ padding: '12px' }}>{product.stock}</td>
+                    <td className="p-3" style={{ padding: '12px' }}>{product.unit}</td>
+                    <td className="p-3" style={{ padding: '12px' }}>{product.prescriptionRequired ? 'Yes' : 'No'}</td>
+                    <td className="p-3" style={{ padding: '12px' }}>
                       <IconButton size="small" title="View">
                         <Visibility />
                       </IconButton>
@@ -303,6 +244,7 @@ export default function PharmacyPage() {
         </CardContent>
       </Card>
 
+      {/* Add/Edit Dialog */}
       <Dialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)}>
         <DialogTitle>{isEditing ? 'Edit Product' : 'Add New Product'}</DialogTitle>
         <DialogContent dividers>

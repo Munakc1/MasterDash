@@ -1,0 +1,148 @@
+{
+  "patients": [
+    {
+      "id": 1006,
+      "name": "John Doe",
+      "gender": "Male",
+      "age": 45,
+      "status": "Admitted",
+      "email": "john.doe@example.com",
+      "phone": "123-456-7890",
+      "image": "/images/patient1.jpg"
+    },
+    {
+      "id": 1002,
+      "name": "Jane Smith",
+      "gender": "Female",
+      "age": 32,
+      "status": "Discharged",
+      "email": "jane.smith@example.com",
+      "phone": "321-654-0987",
+      "image": "/images/patient2.jpg"
+    },
+    {
+      "id": 1003,
+      "name": "Amit Verma",
+      "gender": "Male",
+      "age": 60,
+      "status": "Admitted",
+      "email": "amit.verma@example.com",
+      "phone": "456-789-0123",
+      "image": "/images/patient3.jpg"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Paracetamol 500mg",
+      "category": "Medicines",
+      "brand": "Pharma Inc",
+      "price": 20,
+      "stock": 100,
+      "unit": "tablets",
+      "prescriptionRequired": false
+    },
+    {
+      "id": 2,
+      "name": "Vitamin C 1000mg",
+      "category": "Health Supplements",
+      "brand": "NutriPlus",
+      "price": 35,
+      "stock": 50,
+      "unit": "tablets",
+      "prescriptionRequired": false
+    },
+    {
+      "id": 3,
+      "name": "Digital Thermometer",
+      "category": "Medical Equipment",
+      "brand": "MediTech",
+      "price": 1500,
+      "stock": 20,
+      "unit": "pcs",
+      "prescriptionRequired": false
+    },
+    {
+      "id": 4,
+      "name": "Baby Diapers Size M",
+      "category": "Baby & Maternity",
+      "brand": "BabyCare",
+      "price": 450,
+      "stock": 80,
+      "unit": "packs",
+      "prescriptionRequired": false
+    },
+    {
+      "id": 5,
+      "name": "Hand Sanitizer 250ml",
+      "category": "Personal Care",
+      "brand": "CleanHands",
+      "price": 120,
+      "stock": 200,
+      "unit": "bottles",
+      "prescriptionRequired": false
+    },
+    {
+      "id": 6,
+      "name": "Amoxicillin 500mg",
+      "category": "Medicines",
+      "brand": "HealthCorp",
+      "price": 60,
+      "stock": 70,
+      "unit": "capsules",
+      "prescriptionRequired": true
+    },
+    {
+      "id": 7,
+      "name": "Multivitamin Gummies",
+      "category": "Health Supplements",
+      "brand": "VitaLife",
+      "price": 250,
+      "stock": 45,
+      "unit": "bottles",
+      "prescriptionRequired": false
+    },
+    {
+      "id": 8,
+      "name": "Blood Pressure Monitor",
+      "category": "Medical Equipment",
+      "brand": "CarePlus",
+      "price": 3500,
+      "stock": 15,
+      "unit": "pcs",
+      "prescriptionRequired": false
+    }
+  ],
+  "medicine": [
+    {
+      "id": 1,
+      "name": "Paracetamol 500mg",
+      "manufacturer": "Cipla",
+      "price": 30,
+      "discountedPrice": 25,
+      "inStock": true,
+      "prescriptionRequired": true,
+      "category": "Tablets"
+    },
+    {
+      "id": 2,
+      "name": "Cough Syrup",
+      "manufacturer": "Himalaya",
+      "price": 70,
+      "discountedPrice": 60,
+      "inStock": true,
+      "prescriptionRequired": false,
+      "category": "Syrups"
+    },
+    {
+      "id": 3,
+      "name": "Vitamin D Injection",
+      "manufacturer": "Zydus",
+      "price": 150,
+      "discountedPrice": 130,
+      "inStock": false,
+      "prescriptionRequired": true,
+      "category": "Injections"
+    }
+  ]
+}

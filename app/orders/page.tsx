@@ -2,7 +2,6 @@
 import React, { useState, ChangeEvent } from "react";
 import {
   TextField,
-  Grid,
   Typography,
   InputAdornment,
   Badge,
@@ -31,7 +30,7 @@ interface Medicine {
   discountedPrice: number;
   inStock: boolean;
   prescriptionRequired: boolean;
-  category: string; // Added category field
+  category: string;
 }
 
 const medicines: Medicine[] = [
@@ -118,8 +117,15 @@ export default function MedicineOrderPage() {
       </Typography>
 
       {/* Search and Filter */}
-      <Grid container spacing={2} alignItems="center" marginBottom={3}>
-        <Grid item xs={12} md={6}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "16px",
+          marginBottom: "24px",
+        }}
+      >
+        <div style={{ flex: "1 1 300px" }}>
           <TextField
             fullWidth
             placeholder="Search medicines..."
@@ -135,9 +141,9 @@ export default function MedicineOrderPage() {
               ),
             }}
           />
-        </Grid>
+        </div>
 
-        <Grid item xs={12} md={3}>
+        <div style={{ flex: "1 1 200px" }}>
           <FormControl fullWidth size="small">
             <InputLabel>Category</InputLabel>
             <Select
@@ -152,8 +158,8 @@ export default function MedicineOrderPage() {
               ))}
             </Select>
           </FormControl>
-        </Grid>
-      </Grid>
+        </div>
+      </div>
 
       {/* Medicines Table */}
       <TableContainer component={Paper} sx={{ marginTop: 3 }}>
@@ -178,7 +184,14 @@ export default function MedicineOrderPage() {
               </TableRow>
             ) : (
               filteredMedicines.map((med) => (
-                <TableRow key={med.id}>
+                <TableRow
+                  key={med.id}
+                  hover
+                  style={{ cursor: med.prescriptionRequired ? "pointer" : "default" }}
+                  onClick={() =>
+                    med.prescriptionRequired ? handleOpenPrescriptionModal(med) : undefined
+                  }
+                >
                   <TableCell>{med.name}</TableCell>
                   <TableCell>{med.manufacturer}</TableCell>
                   <TableCell>
@@ -251,7 +264,7 @@ export default function MedicineOrderPage() {
           </Box>
 
           <Box>
-            <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
               Allowed file types: .pdf, .jpg, .jpeg, .png
             </Typography>
           </Box>
